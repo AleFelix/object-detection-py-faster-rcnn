@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 
+import os
 import sys
-
+import shutil
 from extract_frames import extract_frames_from_video
 from detect_objects import detect_objects_in_frames
 from generate_video import generate_processed_video
@@ -33,7 +34,18 @@ PROTOTXT = "py-faster-rcnn/models/coco/VGG16/faster_rcnn_end2end/test.prototxt"
 CAFFEMODEL = "py-faster-rcnn/data/coco_models/coco_vgg16_faster_rcnn_final.caffemodel"
 
 
+def make_dirs(dir_names):
+    for dir_name in dir_names:
+        shutil.rmtree(dir_name, ignore_errors=True)
+        try:
+            os.makedirs(dir_name)
+        except OSError:
+            if not os.path.isdir(dir_name):
+                raise
+
+
 def main(path_video):
+    make_dirs([DIR_AUDIO, DIR_FRAMES, DIR_PROCESSED_FRAMES, DIR_PROCESSED_VIDEO])
     extract_frames_from_video(path_video, DIR_FRAMES, FRAMES_NAME, FRAMES_NAME_SIZE)
     detect_objects_in_frames(DIR_FRAMES, DIR_PROCESSED_FRAMES, PROTOTXT, CAFFEMODEL, CLASSES)
     generate_processed_video(DIR_PROCESSED_FRAMES, FRAMES_NAME, FRAMES_NAME_SIZE, DIR_PROCESSED_VIDEO,
@@ -42,9 +54,10 @@ def main(path_video):
                        PROCESSED_VIDEO_WITH_AUDIO_NAME)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     if len(sys.argv) < 2:
         print "ERROR: Parameter not found: Path of the original video"
         print "USAGE: main_video_process.py <video_path>"
     else:
+        print "STARTING MAIN VIDEO PROCESS"
         main(sys.argv[1])

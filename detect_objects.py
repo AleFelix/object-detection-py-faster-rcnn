@@ -1,3 +1,4 @@
+import _init_paths
 import os
 import cv2
 import caffe

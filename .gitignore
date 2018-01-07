@@ -1,0 +1,6 @@
+/audio/
+/frames/
+/processed/
+/processed_video/
+/.idea/
+*.pyc
