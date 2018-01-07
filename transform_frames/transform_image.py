@@ -35,3 +35,23 @@ def equalize_bgr_image(image):
     img_yuv = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
     img_yuv[:, :, 0] = cv2.equalizeHist(img_yuv[:, :, 0])
     return cv2.cvtColor(img_yuv, cv2.COLOR_YUV2BGR)
+
+
+def apply_filter_to_all_images(dir_imgs, dir_imgs_filtered, kernel):
+    for name_image in listdir(dir_imgs):
+        path_img = join(dir_imgs, name_image)
+        path_img_filtered = join(dir_imgs_filtered, name_image)
+        if isfile(path_img):
+            image = cv2.imread(path_img)
+            image_filtered = apply_filter_to_image(image, kernel)
+            cv2.imwrite(path_img_filtered, image_filtered)
+
+
+def equalize_all_bgr_images(dir_bgr, dir_equalized):
+    for name_image in listdir(dir_bgr):
+        path_img_bgr = join(dir_bgr, name_image)
+        path_img_equalized = join(dir_equalized, name_image)
+        if isfile(path_img_bgr):
+            image_bgr = cv2.imread(path_img_bgr)
+            image_equalized = equalize_bgr_image(image_bgr)
+            cv2.imwrite(path_img_equalized, image_equalized)
